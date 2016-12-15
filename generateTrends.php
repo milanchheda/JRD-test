@@ -5,8 +5,10 @@
 <body>
 <?php
 
-require_once('twitteroauth/twitteroauth.php');
-$const = json_decode(file_get_contents("public/config.json"));
+$filePath = dirname(__FILE__) . '/';
+
+require_once($filePath . 'twitteroauth/twitteroauth.php');
+$const = json_decode(file_get_contents($filePath . "public/config.json"));
 $woid = "1940345";// --- where on earth ID for dubai --- (1 = global/earth) ---
 
 $consumerkey = $const->consumer_key;
