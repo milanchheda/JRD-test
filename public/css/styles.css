@@ -35,8 +35,6 @@ h1, h2, h3, h4, h5, h6{
 .post-avatar {
   border-radius: 50%;
   float: left;
-  margin-left: -3.5em;
-  margin-top: -2em;
   margin-right: 1em;
 }
 
@@ -62,6 +60,7 @@ h1, h2, h3, h4, h5, h6{
     line-height: 30px;
     cursor: pointer;
 }
+
 #trends-container ul {
     background-color: #fff;
     border: 1px solid #e1e8ed;
@@ -70,7 +69,7 @@ h1, h2, h3, h4, h5, h6{
 }
 #tweets-container {
 	float: right;
-	width: 75%;
+	width: 74%;
 }
 #trends-header, #tweets-header {
     background: #1B95E0 !important;
@@ -82,7 +81,9 @@ h1, h2, h3, h4, h5, h6{
     color: #FFF;
     font-weight: bold;
 }
-
+#tweets-posts {
+  margin-top: 18px !important;
+}
 #overlay {
     background: url(2.gif) left top no-repeat;
     height: 64px;

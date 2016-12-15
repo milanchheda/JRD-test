@@ -12,7 +12,7 @@
 		<div id="trends-container">
 			<div id="trends-header">Dubai trends</div>
 			<span class='lastUpdatedOn'></span>
-			<ul></ul>
+			<ul class="trends-list"></ul>
 		</div>
 		<div id="tweets-container">
 			<div id="tweets-header">Showing tweets for <span id="selected-trend"></span></div>
@@ -28,6 +28,7 @@
 <script>
 
 	var socket = io('http://'+document.location.host+':5000',{transports: ['websocket'], upgrade: false});
+	// var socket = io('http://localhost:5000',{transports: ['websocket'], upgrade: false});
 
 	socket.on('trends-changed',function(updateTime){
 		var localDate = new Date(updateTime);
@@ -36,15 +37,17 @@
 	});
 
 	socket.on('twitter-stream',function(data){
-		$("#overlay").hide()
-		tweets = "<section class='post'>" +
-		    "<header class='post-header'>" +
-		        "<img class='post-avatar' height='52' width='52' src='"+data.image+"'>" +
-		        "<h4 class='post-user ng-binding'>" + data.name + "</h4>" +
-		        "<h5 class='ng-binding'>"+data.text+"</h5>" +
-		    "</header>" +
-		"</section>";
-		$("#tweets-posts").append(tweets);
+		$("#overlay").hide();
+		$.each(data, function(k, v){
+			tweets = "<section class='post'>" +
+			    "<header class='post-header'>" +
+			        "<img class='post-avatar' height='52' width='52' src='"+v.image+"'>" +
+			        "<h4 class='post-user ng-binding'>" + v.name + "</h4>" +
+			        "<h5 class='ng-binding'>"+v.text+"</h5>" +
+			    "</header>" +
+			"</section>";
+			$("#tweets-posts").append(tweets);
+		});
 		$("#tweets-posts").append($(".post").get().reverse());
 	});
 
@@ -67,6 +70,7 @@
 	$(document).ready(function(){
 		$(".lastUpdatedOn").text(new Date());
 		getTrends();
+
 		$('#trends-container').on("click", ".trends_link", function(){
         	$("#overlay").show().html('<div class="loadingMessage">Getting the latest tweets, just for you. Hold tight...</div>');
         	$("#selected-trend").text($(this).text());
