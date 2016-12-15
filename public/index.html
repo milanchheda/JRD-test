@@ -29,10 +29,11 @@
 
 	// var socket = io('http://'+document.location.host+':5000',{transports: ['websocket'], upgrade: false});
 	var socket = io('http://35.165.169.65:5000',{transports: ['websocket'], upgrade: false});
+	// var socket = io('http://localhost:5000',{transports: ['websocket'], upgrade: false});
 
 	socket.on('trends-changed',function(updateTime){
 		var localDate = new Date(updateTime);
-		$(".lastUpdatedOn").text(localDate);
+		$(".lastUpdatedOn").text("Trends last updated on: <b>" + localDate + "</b>");
 		getTrends();
 	});
 
@@ -72,7 +73,10 @@
 		getTrends();
 
 		$('#trends-container').on("click", ".trends_link", function(){
-        	$("#overlay").show().html('<div class="loadingMessage">Getting the latest tweets, just for you. Hold tight...</div>');
+			if($("#tweets-posts .post").length > 0) {
+				$("#tweets-posts").html('');
+			}
+			$("#overlay").show().html('<div class="loadingMessage">Getting the latest tweets, just for you. Hold tight...</div>');
         	$("#selected-trend").text($(this).text());
         	socket.emit('trend-clicked', $(this).text());
 
