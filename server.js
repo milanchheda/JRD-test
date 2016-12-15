@@ -1,4 +1,6 @@
 var fs, configurationFile;
+var TWEETS_BUFFER_SIZE = 10;
+var tweetsBuffer = [];
 
 //Get twitter configurations
 configurationFile = 'public/config.json';
@@ -38,6 +40,14 @@ watcher.on('change', function(path, stats){
 	io.sockets.emit('trends-changed', stats.ctime);
 });
 
+var broadcastTweets = function() {
+	//send buffer only if full
+	if (tweetsBuffer.length >= TWEETS_BUFFER_SIZE) {
+		//Yay, got the tweets! Start broadcasting..
+		io.sockets.emit('twitter-stream', tweetsBuffer);
+		tweetsBuffer = [];
+	}
+}
 
 function createStream (keyword) {
 
@@ -46,9 +56,10 @@ function createStream (keyword) {
 
 	stream.on('tweet', function (data) {
 		var tweet = {"text" : data.text, "name" : data.user.screen_name, "image":data.user.profile_image_url};
+			//push msg into buffer
+		tweetsBuffer.push(tweet);
 
-		//Yay, got the tweets! Start emitting..
-		io.sockets.emit('twitter-stream', tweet);
+		broadcastTweets();
 	});
 
 	stream.on('connect', function () {
