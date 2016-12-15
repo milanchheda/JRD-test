@@ -27,8 +27,8 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 
-	var socket = io('http://'+document.location.host+':5000',{transports: ['websocket'], upgrade: false});
-	// var socket = io('http://localhost:5000',{transports: ['websocket'], upgrade: false});
+	// var socket = io('http://'+document.location.host+':5000',{transports: ['websocket'], upgrade: false});
+	var socket = io('http://35.165.169.65:5000',{transports: ['websocket'], upgrade: false});
 
 	socket.on('trends-changed',function(updateTime){
 		var localDate = new Date(updateTime);
