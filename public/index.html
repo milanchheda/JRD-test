@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Tweets Map</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+
+<body>
+	<div class='container'>
+		<div id="trends-container">
+			<div id="trends-header">Dubai trends</div>
+			<ul></ul>
+		</div>
+		<div id="tweets-container">
+			<div id="tweets-header">Showing tweets for <span id="selected-trend"></span></div>
+			<div id="tweets-posts"></div>
+		</div>
+	</div>
+<div id="overlay" class="overlay"></div>
+</body>
+
+<!-- <script src="/socket.io/socket.io.js"></script> -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	var socket = io('http://localhost:5000',{transports: ['websocket'], upgrade: false});
+	// socket.on('keyword-changed',function(data){
+	// 	console.log(data);
+	// });
+
+	socket.on('twitter-stream',function(data){
+
+		tweets = "<section class='post'>" +
+		    "<header class='post-header'>" +
+		        "<img class='post-avatar' height='52' width='52' src='"+data.image+"'>" +
+		        "<h4 class='post-user ng-binding'>" + data.name + "</h4>" +
+		        "<h5 class='ng-binding'>"+data.text+"</h5>" +
+		    "</header>" +
+		"</section>";
+		$("#tweets-posts").append(tweets);
+		$("#tweets-posts").append($(".post").get().reverse());
+	});
+
+
+</script>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$.get('data/trends.txt', function(data){
+			var lines = data.split("\n");
+			len = lines.length;
+	        for (var i = 1;  i < len; i++) {
+	        	liHtml = "<li class='trends_link'>"+lines[i]+"</li>";
+	        	if($.trim(lines[i]) != '')
+	            	$("#trends-container ul").append(liHtml);
+	        }
+
+	        $('#trends-container').on("click", ".trends_link", function(){
+	        	$("#overlay").show().html('<div class="loadingMessage">Getting the latest tweets, just for you. Hold tight...</div>');
+	        	$("#selected-trend").text($(this).text());
+	        	socket.emit('keyword-change', $(this).text());
+
+	        });
+
+		});
+	})
+</script>
+</html>
