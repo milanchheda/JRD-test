@@ -23,7 +23,7 @@ foreach ($dubai_trends[0]->trends as $value) {
 	$trends .= htmlentities($value->name, ENT_QUOTES, "UTF-8") . PHP_EOL;
 }
 
-file_put_contents('public/data/trends.txt', $trends);
+file_put_contents($filePath . 'public/data/trends.txt', $trends);
 
 ?>
 
