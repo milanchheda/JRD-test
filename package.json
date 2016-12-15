@@ -1,0 +1,21 @@
+{
+  "name": "jtr-twitter-test",
+  "version": "1.0.0",
+  "description": "An application that will show twitter trends from dubai and thereby streams of trends, when clicked on it.",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/milanchheda/JRD-test.git"
+  },
+  "author": "Milan Chheda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/milanchheda/JRD-test/issues"
+  },
+  "homepage": "https://github.com/milanchheda/JRD-test#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "socket.io": "^1.7.2",
+    "twit": "^2.2.5"
+  }
+}
