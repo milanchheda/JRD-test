@@ -14,6 +14,7 @@
   },
   "homepage": "https://github.com/milanchheda/JRD-test#readme",
   "dependencies": {
+    "chokidar": "^1.6.1",
     "express": "^4.14.0",
     "socket.io": "^1.7.2",
     "twit": "^2.2.5"

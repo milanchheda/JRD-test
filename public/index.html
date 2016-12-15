@@ -2,7 +2,7 @@
 <html>
 
 <head>
-	<title>Tweets Map</title>
+	<title>Dubai Trends</title>
 	<link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
 </head>
@@ -11,6 +11,7 @@
 	<div class='container'>
 		<div id="trends-container">
 			<div id="trends-header">Dubai trends</div>
+			<span class='lastUpdatedOn'></span>
 			<ul></ul>
 		</div>
 		<div id="tweets-container">
@@ -19,21 +20,22 @@
 		</div>
 	</div>
 <div id="overlay" class="overlay"></div>
-</body>
 
-<!-- <script src="/socket.io/socket.io.js"></script> -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
 	var socket = io('http://localhost:5000',{transports: ['websocket'], upgrade: false});
-	// socket.on('keyword-changed',function(data){
-	// 	console.log(data);
-	// });
+
+	socket.on('trends-changed',function(updateTime){
+		var localDate = new Date(updateTime);
+		$(".lastUpdatedOn").text(localDate);
+		getTrends();
+	});
 
 	socket.on('twitter-stream',function(data){
-
+		$("#overlay").hide()
 		tweets = "<section class='post'>" +
 		    "<header class='post-header'>" +
 		        "<img class='post-avatar' height='52' width='52' src='"+data.image+"'>" +
@@ -50,7 +52,7 @@
 
 
 <script type="text/javascript">
-	$(document).ready(function(){
+	function getTrends() {
 		$.get('data/trends.txt', function(data){
 			var lines = data.split("\n");
 			len = lines.length;
@@ -59,15 +61,18 @@
 	        	if($.trim(lines[i]) != '')
 	            	$("#trends-container ul").append(liHtml);
 	        }
-
-	        $('#trends-container').on("click", ".trends_link", function(){
-	        	$("#overlay").show().html('<div class="loadingMessage">Getting the latest tweets, just for you. Hold tight...</div>');
-	        	$("#selected-trend").text($(this).text());
-	        	socket.emit('keyword-change', $(this).text());
-
-	        });
-
 		});
+	}
+	$(document).ready(function(){
+		$(".lastUpdatedOn").text(new Date());
+		getTrends();
+		$('#trends-container').on("click", ".trends_link", function(){
+        	$("#overlay").show().html('<div class="loadingMessage">Getting the latest tweets, just for you. Hold tight...</div>');
+        	$("#selected-trend").text($(this).text());
+        	socket.emit('trend-clicked', $(this).text());
+
+        });
 	})
 </script>
+</body>
 </html>
