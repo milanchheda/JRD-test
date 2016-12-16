@@ -23,65 +23,7 @@
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-
 <script src="/socket.io/socket.io.js"></script>
-<script>
-
-	// var socket = io('http://'+document.location.host+':5000',{transports: ['websocket'], upgrade: false});
-	var socket = io('http://35.165.169.65:5000',{transports: ['websocket'], upgrade: false});
-	// var socket = io('http://localhost:5000',{transports: ['websocket'], upgrade: false});
-
-	socket.on('trends-changed',function(updateTime){
-		var localDate = new Date(updateTime);
-		$(".lastUpdatedOn").text("Trends last updated on: <b>" + localDate + "</b>");
-		getTrends();
-	});
-
-	socket.on('twitter-stream',function(data){
-		$("#overlay").hide();
-		$.each(data, function(k, v){
-			tweets = "<section class='post'>" +
-			    "<header class='post-header'>" +
-			        "<img class='post-avatar' height='52' width='52' src='"+v.image+"'>" +
-			        "<h4 class='post-user ng-binding'>" + v.name + "</h4>" +
-			        "<h5 class='ng-binding'>"+v.text+"</h5>" +
-			    "</header>" +
-			"</section>";
-			$("#tweets-posts").append(tweets);
-		});
-		$("#tweets-posts").append($(".post").get().reverse());
-	});
-
-
-</script>
-
-
-<script type="text/javascript">
-	function getTrends() {
-		$.get('data/trends.txt', function(data){
-			var lines = data.split("\n");
-			len = lines.length;
-	        for (var i = 1;  i < len; i++) {
-	        	liHtml = "<li class='trends_link'>"+lines[i]+"</li>";
-	        	if($.trim(lines[i]) != '')
-	            	$("#trends-container ul").append(liHtml);
-	        }
-		});
-	}
-	$(document).ready(function(){
-		$(".lastUpdatedOn").text(new Date());
-		getTrends();
-
-		$('#trends-container').on("click", ".trends_link", function(){
-			if($("#tweets-posts .post").length > 0) {
-				$("#tweets-posts").html('');
-			}
-			$("#overlay").show().html('<div class="loadingMessage">Getting the latest tweets, just for you. Hold tight...</div>');
-        	$("#selected-trend").text($(this).text());
-        	socket.emit('trend-clicked', $(this).text());
-
-        });
-	})
-</script>
+<script src="js/app.js"></script>
 </body>
 </html>
