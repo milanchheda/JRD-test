@@ -1,19 +1,10 @@
 
-var socket = io('http://localhost:5000',{transports: ['websocket'], upgrade: false});
+var socket = io('http://35.165.169.65:5000',{transports: ['websocket'], upgrade: false});
 $(document).ready(function (){
-	clickedCount = 1;
 	$(".lastUpdatedOn").text(new Date());
 	getTrends();
 
 	$('#trends-container').on("click", ".trends_link", function(){
-		// if(clickedCount==3){
-		// 	socket.emit('leaveRoom', 'channel-3');
-		// 	clickedCount = 1;
-		// }else{
-		// 	if(clickedCount>1)
-		// 		socket.emit('leaveRoom', 'channel-'+(clickedCount-1));
-		// }
-		// var prevTrend = $("#selected-trend").text();
 		if($("#tweets-posts .post").length > 0) {
 			$("#tweets-posts").html('');
 		}
@@ -21,8 +12,6 @@ $(document).ready(function (){
 
     	$("#selected-trend").text($(this).text());
     	socket.emit('trend-clicked', 'channel-'+($(this).index()+1));
-    	clickedCount++;
-
     });
 });
 
@@ -44,14 +33,14 @@ socket.on('twitter-stream',function(data){
 		"</section>";
 		$("#tweets-posts").append(tweets);
 
-	// $("#tweets-posts").append($(".post").get().reverse());
+	$("#tweets-posts").html($(".post").get().reverse());
 });
 
 function getTrends() {
 	$.get('data/trends.txt', function(data){
 		var lines = data.split("\n");
 		len = lines.length;
-        for (var i = 1;  i < 20; i++) {
+        for (var i = 0;  i < 20; i++) {
         	liHtml = "<li class='trends_link'>"+lines[i]+"</li>";
         	if($.trim(lines[i]) != '')
             	$("#trends-container ul").append(liHtml);
